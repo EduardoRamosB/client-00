@@ -7,7 +7,7 @@ const ProtectedRoutes = () => {
   return (
     user_id ?
       <Outlet /> :
-      <Navigate to='/users/sign_in?msg=You need to sign in or sign up before continuing.' />
+      <Navigate to='/users/sign_in?msg=You need to Login or Register before continuing.' />
   )
 }
 

@@ -1,12 +1,12 @@
 import Layout from "../components/layout/Layout";
 import { Card, Container, TextInput, Stack, PasswordInput, Button } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { User } from "../types"; // Adjust path if necessary
+import { User } from "../types";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { signUp } from "../api/users.api"; // Adjust path if necessary
-import { handleApiError } from "../utils/errorHandler"; // Adjust path if necessary
-import { useAuth } from "../hooks/useAuth.jsx";
-import {useNavigate} from "react-router-dom"; // Adjust path if necessary
+import { signUp } from "../api/users.api";
+import { handleApiError } from "../utils/errorHandler";
+import { useAuth } from "../hooks/useAuth.tsx";
+import {useNavigate} from "react-router-dom";
 
 interface FormValues {
   username: string;
@@ -67,7 +67,7 @@ const SignUp = () => {
               <TextInput
                 label="Email"
                 placeholder="Input email"
-                type="email" // Make sure the input is of type email
+                type="email"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {

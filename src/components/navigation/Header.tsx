@@ -8,16 +8,17 @@ import {useAuth} from "../../hooks/useAuth";
 import {LogOut} from "../../api/users.api.ts";
 
 interface LinkItem {
+  id: string;
   link: string;
   label: string;
 }
 
 interface PublicLink {
+  color: string;
   id: string;
   label: string;
   link: string;
-  links?: LinkItem[]; // Optional array of sub-links
-  color: string
+  links?: LinkItem[];
 }
 
 const publicLinks: PublicLink[] = [
@@ -33,7 +34,7 @@ const publicLinks: PublicLink[] = [
     link: '/users/sign_in',
     color: 'blue'
   },
-]
+];
 
 const links = [
   {
@@ -47,44 +48,50 @@ const links = [
 ];
 
 interface IHeaderProps {
-  from: string
-  onBurgerClick: () => void
+  from: string;
+  onBurgerClick: () => void;
 }
 
 export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
   const [opened] = useDisclosure(false);
-  const { jwt, refresh_token, logout } = useAuth()
-  const navigate = useNavigate()
+  const { jwt, refresh_token, logout } = useAuth();  // Make sure useAuth is typed correctly
+  const navigate = useNavigate();
 
-  const handleLogout = async (e) => {
-    e.preventDefault()
+  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+
+    if (!jwt || !refresh_token) {
+      console.log('No valid JWT or refresh token');
+      return;
+    }
 
     try {
       const res = await LogOut(jwt, refresh_token);
       console.log('res:', res);
-      logout()
-      navigate('/users/sign_in', { replace: true })
+      logout();
+      navigate('/users/sign_in', { replace: true });
     } catch (e) {
-      console.log(e)
+      console.log(e);
     } finally {
-      logout()
+      logout();
     }
-  }
+  };
 
-  const selectedLinks = from === 'authenticated' ? links : publicLinks
+  const selectedLinks = from === 'authenticated' ? links : publicLinks;
   const items = selectedLinks.map((link) => {
-    const menuItems = link.links?.map((item: LinkItem) => (
-      <Menu.Item key={item.id}>
-        {item.label}
-      </Menu.Item>
-    ));
+    // Handle authenticated links with sub-links
+    if ('links' in link && link.links) {
+      const menuItems = link.links.map((item: LinkItem) => (
+        <Menu.Item key={item.id}>
+          {item.label}
+        </Menu.Item>
+      ));
 
-    if (menuItems) {
       return (
-        <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+        <Menu key={link.id} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
           <Menu.Target>
             <a
-              href='#'
+              href="#"
               className={classes.link}
               onClick={handleLogout}
             >
@@ -99,27 +106,24 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
       );
     }
 
-    if (from === 'public') {
+    // Handle public links by checking if 'link' exists
+    if ('link' in link) {
       return (
         <Link key={link.id} to={link.link} style={{ textDecoration: 'none' }}>
-          <Button variant="filled" color={link.color}>{link.label}</Button>
+          <Button variant="filled" color={link.color || 'default'}>{link.label}</Button>
         </Link>
-      )
+      );
     }
 
-    return (
-      <Link key={link.id} to={link.link} className={classes.link}>
-        {link.label}
-      </Link>
-    );
+    return null;
   });
+
 
   return (
     <header className={classes.header}>
       <Container size="lg">
         <div className={classes.inner}>
           <Group className={classes.leftItems}>
-            {/* Add other items here if needed */}
             <Link to='/' className={classes.link}>
               Home
             </Link>
@@ -138,4 +142,4 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
       </Container>
     </header>
   );
-}
+};

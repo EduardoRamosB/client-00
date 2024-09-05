@@ -9,7 +9,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import { Notifications } from "@mantine/notifications";
-import { AuthProvider } from "./hooks/useAuth.jsx";
+import { AuthProvider } from "./hooks/useAuth.tsx";
 import ProtectedRoutes from "./components/navigation/ProtectedRoutes";
 
 const App: React.FC = () => {
