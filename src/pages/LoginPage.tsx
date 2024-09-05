@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import Layout from "../components/layout/Layout";
 import AuthForm from "../components/auth/AuthForm";
 import { logIn } from "../api/users.api";
@@ -6,11 +7,13 @@ import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import {Center} from "@mantine/core";
 
-const LoginPage = () => {
+const LoginPage: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { login: performLogin } = useAuth();
   const navigate = useNavigate();
 
   const onSubmit = async (data: { email: string; password: string }) => {
+    setIsLoading(true)
     try {
       const res = await logIn(data.email, data.password);
       console.log('res:', res)
@@ -23,6 +26,8 @@ const LoginPage = () => {
       }
     } catch (error) {
       handleApiError(error);
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -35,6 +40,7 @@ const LoginPage = () => {
         onSubmit={onSubmit}
         fields={{ username: false, confirmPassword: false }}
         submitLabel="Log In"
+        isLoading={isLoading}
       />
     </Layout>
   );

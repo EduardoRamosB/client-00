@@ -17,9 +17,10 @@ interface AuthFormProps {
     confirmPassword?: boolean;
   };
   submitLabel: string;
+  isLoading: boolean;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLoading }) => {
   const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
   const [visible, { toggle }] = useDisclosure(false);
   const password = watch("password");
@@ -86,7 +87,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel }) =>
               />
             )}
 
-            <Button color="violet" fullWidth mt="md" radius="md" type="submit">
+            <Button color="violet" fullWidth mt="md" radius="md" type="submit" loading={isLoading}>
               {submitLabel}
             </Button>
           </Stack>

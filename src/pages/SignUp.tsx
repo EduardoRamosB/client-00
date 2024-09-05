@@ -1,3 +1,4 @@
+import React, {useState} from "react";
 import Layout from "../components/layout/Layout";
 import AuthForm from "../components/auth/AuthForm";
 import { User } from "../types";
@@ -7,7 +8,8 @@ import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import {Center} from "@mantine/core";
 
-const SignUp = () => {
+const SignUp: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -19,6 +21,8 @@ const SignUp = () => {
       password_confirmation: data.confirmPassword,
     };
 
+    setIsLoading(true);
+
     try {
       const res = await signUp(user);
       if (res.status === 201) {
@@ -28,6 +32,8 @@ const SignUp = () => {
       }
     } catch (error) {
       handleApiError(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -40,6 +46,7 @@ const SignUp = () => {
         onSubmit={onSubmit}
         fields={{ username: true, confirmPassword: true }}
         submitLabel="Sign Up"
+        isLoading={isLoading}
       />
     </Layout>
   );

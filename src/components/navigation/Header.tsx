@@ -1,11 +1,11 @@
 import React from "react";
-import {Menu, Group, Center, Burger, Container, Button} from '@mantine/core';
+import { Menu, Group, Center, Burger, Container, Button } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import classes from './Header.module.css';
-import {Link, useNavigate} from "react-router-dom";
-import {useAuth} from "../../hooks/useAuth";
-import {LogOut} from "../../api/users.api.ts";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
+import { LogOut } from "../../api/users.api.ts";
 
 interface LinkItem {
   id: string;
@@ -54,12 +54,10 @@ interface IHeaderProps {
 
 export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
   const [opened] = useDisclosure(false);
-  const { jwt, refresh_token, logout } = useAuth();  // Make sure useAuth is typed correctly
+  const { jwt, refresh_token, logout } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-
+  const handleLogout = async () => {
     if (!jwt || !refresh_token) {
       console.log('No valid JWT or refresh token');
       return;
@@ -69,6 +67,7 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
       const res = await LogOut(jwt, refresh_token);
       console.log('res:', res?.status);
       logout();
+
       navigate('/users/sign_in', { replace: true });
     } catch (e) {
       console.log(e);
@@ -82,19 +81,21 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
     // Handle authenticated links with sub-links
     if ('links' in link && link.links) {
       const menuItems = link.links.map((item: LinkItem) => (
-        <Menu.Item key={item.id}>
-          {item.label}
+        <Menu.Item key={item.id} onClick={item.label === 'Logout' ? handleLogout : undefined}>
+          {item.label === 'Logout' ? (
+            item.label
+          ) : (
+            <Link to={item.link} style={{ textDecoration: 'none' }}>
+              {item.label}
+            </Link>
+          )}
         </Menu.Item>
       ));
 
       return (
-        <Menu key={link.id} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+        <Menu key={link.id} transitionProps={{ exitDuration: 0 }} withinPortal>
           <Menu.Target>
-            <a
-              href="#"
-              className={classes.link}
-              onClick={handleLogout}
-            >
+            <a href="#" className={classes.link}>
               <Center>
                 <span className={classes.linkLabel}>{link.label}</span>
                 <IconChevronDown size="0.9rem" stroke={1.5} />
@@ -117,7 +118,6 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
 
     return null;
   });
-
 
   return (
     <header className={classes.header}>
