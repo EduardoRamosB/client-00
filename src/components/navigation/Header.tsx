@@ -4,26 +4,37 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import classes from './Header.module.css';
 
+const publicLinks = [
+  {
+    link: '#1',
+    label: 'Sign Up'
+  },
+  {
+    link: '#2',
+    label: 'Login'
+  },
+]
+
 const links = [
   {
     link: '#1',
-    label: 'Support',
+    label: 'Welcome',
     links: [
-      { link: '/faq', label: 'FAQ' },
-      { link: '/demo', label: 'Book a demo' },
-      { link: '/forums', label: 'Forums' },
+      { link: '/faq', label: 'Profile' },
+      { link: '/forums', label: 'Logout' },
     ],
   },
 ];
 
 interface IHeaderProps {
+  from: string
   onBurgerClick: () => void
 }
 
-export const Header: React.FC<IHeaderProps> = ({ onBurgerClick }) => {
+export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
   const [opened] = useDisclosure(false);
 
-  const items = links.map((link) => {
+  const items = publicLinks.map((link) => {
     const menuItems = link.links?.map((item) => (
       <Menu.Item key={item.link}>{item.label}</Menu.Item>
     ));
@@ -64,17 +75,19 @@ export const Header: React.FC<IHeaderProps> = ({ onBurgerClick }) => {
     <header className={classes.header}>
       <Container size="md">
         <div className={classes.inner}>
-          <Group gap={5} className={classes.hiddenFrom}>
-            {items}
+          <Group className={classes.leftItems}>
+            {/* Add other items here if needed */}
           </Group>
-          <Burger
-            opened={opened}
-            onClick={onBurgerClick}
-            size="sm"
-            className={classes.hiddenFrom}
-            mt='sm'
-            hiddenFrom ="md"
-          />
+          <Group className={classes.rightItems}>
+            {items}
+            {from === 'authenticated' &&
+              <Burger
+                opened={opened}
+                onClick={onBurgerClick}
+                size="sm"
+                className={classes.burger}
+              />}
+          </Group>
         </div>
       </Container>
     </header>

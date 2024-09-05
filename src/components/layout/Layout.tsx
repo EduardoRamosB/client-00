@@ -4,24 +4,34 @@ import Sidebar from "../navigation/Sidebar.tsx";
 import {Header} from "../navigation/Header.tsx";
 import {useDisclosure} from "@mantine/hooks";
 
-const Layout: React.FC = () => {
+interface IHomeProps {
+  from: string
+  children: React.ReactNode
+}
+
+const Layout: React.FC<IHomeProps> = ({ from, children  }) => {
   const [drawerOpened, { open: openDrawer, close: closeDrawer }] = useDisclosure(false)
 
   return (
     <>
       <Container size="lg">
         <Grid>
-          <Grid.Col span={{ base: 12, xs: 4 }} visibleFrom ="md">
-            <Sidebar />
-          </Grid.Col>
-          <Grid.Col span={{ base: 12, xs: 8 }}>
+          {from === 'authenticated' &&
+            <Grid.Col span={{ base: 12, xs: 4 }} visibleFrom ="md">
+              <Sidebar />
+            </Grid.Col>}
+
+          <Grid.Col span={{ base: 12, xs: from === 'authenticated' ? 8 : 12 }}>
             <Grid>
               <Grid.Col span={12}>
-                <Header onBurgerClick={openDrawer}/>
+                <Header
+                  from={from}
+                  onBurgerClick={openDrawer}
+                />
               </Grid.Col>
               <Grid.Col span={12}>
                 <Paper>
-                  Main content
+                  {children}
                 </Paper>
               </Grid.Col>
             </Grid>
