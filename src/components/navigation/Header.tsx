@@ -3,7 +3,9 @@ import {Menu, Group, Center, Burger, Container, Button} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import classes from './Header.module.css';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useAuth} from "../../hooks/useAuth";
+import {LogOut} from "../../api/users.api.ts";
 
 interface LinkItem {
   link: string;
@@ -33,16 +35,16 @@ const publicLinks: PublicLink[] = [
   },
 ]
 
-/*const links = [
+const links = [
   {
-    link: '#1',
+    id: '#1',
     label: 'Welcome',
     links: [
-      { link: '/faq', label: 'Profile' },
-      { link: '/forums', label: 'Logout' },
+      { id: '#l1', link: '/faq', label: 'Profile' },
+      { id: '#l2', link: '/forums', label: 'Logout' },
     ],
   },
-];*/
+];
 
 interface IHeaderProps {
   from: string
@@ -51,10 +53,28 @@ interface IHeaderProps {
 
 export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
   const [opened] = useDisclosure(false);
+  const { jwt, refresh_token, logout } = useAuth()
+  const navigate = useNavigate()
 
-  const items = publicLinks.map((link) => {
+  const handleLogout = async (e) => {
+    e.preventDefault()
+
+    try {
+      const res = await LogOut(jwt, refresh_token);
+      console.log('res:', res);
+      logout()
+      navigate('/users/sign_in', { replace: true })
+    } catch (e) {
+      console.log(e)
+    } finally {
+      logout()
+    }
+  }
+
+  const selectedLinks = from === 'authenticated' ? links : publicLinks
+  const items = selectedLinks.map((link) => {
     const menuItems = link.links?.map((item: LinkItem) => (
-      <Menu.Item>
+      <Menu.Item key={item.id}>
         {item.label}
       </Menu.Item>
     ));
@@ -64,9 +84,9 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
         <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
           <Menu.Target>
             <a
-              href={link.link}
+              href='#'
               className={classes.link}
-              onClick={(event) => event.preventDefault()}
+              onClick={handleLogout}
             >
               <Center>
                 <span className={classes.linkLabel}>{link.label}</span>
