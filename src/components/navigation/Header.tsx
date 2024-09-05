@@ -1,21 +1,39 @@
 import React from "react";
-import { Menu, Group, Center, Burger, Container } from '@mantine/core';
+import {Menu, Group, Center, Burger, Container, Button} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronDown } from '@tabler/icons-react';
 import classes from './Header.module.css';
+import {Link} from "react-router-dom";
 
-const publicLinks = [
+interface LinkItem {
+  link: string;
+  label: string;
+}
+
+interface PublicLink {
+  id: string;
+  label: string;
+  link: string;
+  links?: LinkItem[]; // Optional array of sub-links
+  color: string
+}
+
+const publicLinks: PublicLink[] = [
   {
-    link: '#1',
-    label: 'Sign Up'
+    id: '#1',
+    label: 'Sign Up',
+    link: '/users/sign_up',
+    color: 'violet'
   },
   {
-    link: '#2',
-    label: 'Login'
+    id: '#2',
+    label: 'Login',
+    link: '/users/sign_in',
+    color: 'blue'
   },
 ]
 
-const links = [
+/*const links = [
   {
     link: '#1',
     label: 'Welcome',
@@ -24,7 +42,7 @@ const links = [
       { link: '/forums', label: 'Logout' },
     ],
   },
-];
+];*/
 
 interface IHeaderProps {
   from: string
@@ -35,8 +53,10 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
   const [opened] = useDisclosure(false);
 
   const items = publicLinks.map((link) => {
-    const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link}>{item.label}</Menu.Item>
+    const menuItems = link.links?.map((item: LinkItem) => (
+      <Menu.Item>
+        {item.label}
+      </Menu.Item>
     ));
 
     if (menuItems) {
@@ -59,24 +79,30 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
       );
     }
 
+    if (from === 'public') {
+      return (
+        <Link key={link.id} to={link.link} style={{ textDecoration: 'none' }}>
+          <Button variant="filled" color={link.color}>{link.label}</Button>
+        </Link>
+      )
+    }
+
     return (
-      <a
-        key={link.label}
-        href={link.link}
-        className={classes.link}
-        onClick={(event) => event.preventDefault()}
-      >
+      <Link key={link.id} to={link.link} className={classes.link}>
         {link.label}
-      </a>
+      </Link>
     );
   });
 
   return (
     <header className={classes.header}>
-      <Container size="md">
+      <Container size="lg">
         <div className={classes.inner}>
           <Group className={classes.leftItems}>
             {/* Add other items here if needed */}
+            <Link to='/' className={classes.link}>
+              Home
+            </Link>
           </Group>
           <Group className={classes.rightItems}>
             {items}
