@@ -67,7 +67,7 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
 
     try {
       const res = await LogOut(jwt, refresh_token);
-      console.log('res:', res);
+      console.log('res:', res?.status);
       logout();
       navigate('/users/sign_in', { replace: true });
     } catch (e) {

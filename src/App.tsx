@@ -5,7 +5,7 @@ import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
 import { MantineProvider } from "@mantine/core";
 import Home from "./pages/Home";
-import Login from "./pages/Login";
+import Login from "./pages/LoginPage.tsx";
 import SignUp from "./pages/SignUp";
 import Dashboard from "./pages/Dashboard";
 import { Notifications } from "@mantine/notifications";

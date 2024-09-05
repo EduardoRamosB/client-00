@@ -1,29 +1,24 @@
 import Layout from "../components/layout/Layout";
 import AuthForm from "../components/auth/AuthForm";
-import { User } from "../types";
-import { signUp } from "../api/users.api";
+import { logIn } from "../api/users.api";
 import { handleApiError } from "../utils/errorHandler";
 import { useAuth } from "../hooks/useAuth.tsx";
 import { useNavigate } from "react-router-dom";
 import {Center} from "@mantine/core";
 
-const SignUp = () => {
-  const { login } = useAuth();
+const LoginPage = () => {
+  const { login: performLogin } = useAuth();
   const navigate = useNavigate();
 
-  const onSubmit = async (data:any) => {
-    const user: User = {
-      username: data.username,
-      email: data.email,
-      password: data.password,
-      password_confirmation: data.confirmPassword,
-    };
-
+  const onSubmit = async (data: { email: string; password: string }) => {
     try {
-      const res = await signUp(user);
-      if (res.status === 201) {
+      const res = await logIn(data.email, data.password);
+      console.log('res:', res)
+
+      if (res.status === 200) {
         const { id, tokens } = res.data;
-        login({ id, tokens });
+        performLogin({ id, tokens });
+
         navigate("/users/dashboard");
       }
     } catch (error) {
@@ -34,15 +29,15 @@ const SignUp = () => {
   return (
     <Layout from="public">
       <Center>
-        <h1>Sign up</h1>
+        <h1>Login</h1>
       </Center>
       <AuthForm
         onSubmit={onSubmit}
-        fields={{ username: true, confirmPassword: true }}
-        submitLabel="Sign Up"
+        fields={{ username: false, confirmPassword: false }}
+        submitLabel="Log In"
       />
     </Layout>
   );
 };
 
-export default SignUp;
+export default LoginPage;
