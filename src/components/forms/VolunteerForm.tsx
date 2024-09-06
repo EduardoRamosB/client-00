@@ -44,22 +44,21 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ form, setForm, onSubmit, 
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
         <TextInput
-          name="username"
-          label="Username"
-          value={form.username || ''}
+          name="first_name"
+          label="Nombre"
+          type="text"
+          value={form.first_name || ''}
           onChange={handleChange}
-          placeholder="Ingrese username"
-          required
+          placeholder="Ingrese nombre"
         />
 
         <TextInput
-          name="email"
-          label="Email"
-          type="email"
-          value={form.email || ''}
+          name="last_name"
+          label="Apellido"
+          type="text"
+          value={form.last_name || ''}
           onChange={handleChange}
-          placeholder="Ingrese email"
-          required
+          placeholder="Ingrese apellido"
         />
 
         <PasswordInput
@@ -78,24 +77,6 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ form, setForm, onSubmit, 
           onChange={handleChange}
           placeholder="Confirmar Password"
           required={editingVolunteer === null}
-        />
-
-        <TextInput
-          name="first_name"
-          label="Nombre"
-          type="text"
-          value={form.first_name || ''}
-          onChange={handleChange}
-          placeholder="Ingrese nombre"
-        />
-
-        <TextInput
-          name="last_name"
-          label="Apellido"
-          type="text"
-          value={form.last_name || ''}
-          onChange={handleChange}
-          placeholder="Ingrese apellido"
         />
 
         <Group align="right">

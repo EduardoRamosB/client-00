@@ -32,7 +32,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <Layout from="public">
+    <Layout user={null} from="public">
       <Center>
         <h1>Login</h1>
       </Center>
