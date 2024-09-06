@@ -24,7 +24,7 @@ const data: NavItem[] = [
   { link: '/users/dashboard', label: 'Dashboard', icon: IconHome as IconComponent, roles: ['admin', 'volunteer', 'adopter'] },
   { link: '/users/animals', label: 'Animales', icon: IconFingerprint as IconComponent, roles: ['admin', 'volunteer', 'adopter'] },
   { link: '/users/adoptions', label: 'Adopciones', icon: IconCalendarHeart as IconComponent, roles: ['admin', 'volunteer'] },
-  { link: '/users/adopters', label: 'Adoptadores', icon: IconUserHeart as IconComponent, roles: ['admin', 'volunteer'] },
+  { link: '/users/adopter', label: 'Adoptadores', icon: IconUserHeart as IconComponent, roles: ['admin', 'volunteer'] },
   { link: '/users/volunteer', label: 'Voluntarios', icon: IconUsersGroup as IconComponent, roles: ['admin'] },
   { link: '/settings', label: 'Other Settings', icon: IconSettings as IconComponent, roles: ['admin', 'volunteer', 'adopter'] },
 ];

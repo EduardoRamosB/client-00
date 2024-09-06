@@ -30,13 +30,14 @@ const Users: React.FC = () => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       if (jwt) {
+        console.log('role:', role)
         const fetchedVolunteers = await getVolunteers(jwt, role!);
         setVolunteers(fetchedVolunteers);
       }
     };
 
     fetchVolunteers();
-  }, [jwt]);
+  }, [jwt, role]);
 
   const handleSubmit = async () => {
     if (!user?.id) {
