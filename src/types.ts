@@ -1,10 +1,12 @@
 export interface User {
-  id?: number
+  id?: number;
   username: string;
   email: string;
-  password: string;
-  password_confirmation: string;
+  password?: string;
+  password_confirmation?: string;
   role?: string;
+  first_name?: string;
+  last_name?: string;
 }
 
 export interface Animal {
