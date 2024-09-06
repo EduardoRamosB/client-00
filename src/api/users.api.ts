@@ -46,43 +46,43 @@ export const getUserInfo = async (jwt: string): Promise<{ data: User }> => {
 };
 
 /**** Volunteers *****/
-export const getVolunteers = async (jwt: string): Promise<User[]> => {
+export const getVolunteers = async (jwt: string, role: string): Promise<User[]> => {
   const config = {
     headers: {
       'Authorization': `Bearer ${jwt}`
     }
   };
-  const response = await usersApi.get('volunteers/', config);
+  const response = await usersApi.get(`users/${role}/`, config);
   console.log('response.data:', response.data)
   return response.data;
 };
 
-export const createVolunteer = async (volunteer: User, jwt: string): Promise<User> => {
+export const createVolunteer = async (volunteer: User, jwt: string, role: string): Promise<User> => {
   const config = {
     headers: {
       'Authorization': `Bearer ${jwt}`
     }
   };
   console.log('volunteer:', volunteer)
-  const response = await usersApi.post('volunteers/', volunteer, config);
+  const response = await usersApi.post(`users/${role}/`, volunteer, config);
   return response.data;
 };
 
-export const updateVolunteer = async (id: number, volunteer: User, jwt: string): Promise<User> => {
+export const updateVolunteer = async (id: number, volunteer: User, jwt: string, role: string): Promise<User> => {
   const config = {
     headers: {
       'Authorization': `Bearer ${jwt}`
     }
   };
-  const response = await usersApi.put(`volunteers/${id}/`, volunteer, config);
+  const response = await usersApi.put(`users/${role}/${id}/`, volunteer, config);
   return response.data;
 };
 
-export const deleteVolunteer = async (id: number, jwt: string): Promise<void> => {
+export const deleteVolunteer = async (id: number, jwt: string, role: string): Promise<void> => {
   const config = {
     headers: {
       'Authorization': `Bearer ${jwt}`
     }
   };
-  await usersApi.delete(`volunteers/${id}/`, config);
+  await usersApi.delete(`users/${role}/${id}/`, config);
 };

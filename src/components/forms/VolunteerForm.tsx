@@ -43,6 +43,27 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ form, setForm, onSubmit, 
   return (
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
+        {!editingVolunteer && <>
+          <TextInput
+            name="username"
+            label="Username"
+            value={form.username || ''}
+            onChange={handleChange}
+            placeholder="Ingrese username"
+            required
+          />
+
+          <TextInput
+            name="email"
+            label="Email"
+            type="email"
+            value={form.email || ''}
+            onChange={handleChange}
+            placeholder="Ingrese email"
+            required
+          />
+        </>}
+
         <TextInput
           name="first_name"
           label="Nombre"

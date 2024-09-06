@@ -26,7 +26,7 @@ const Volunteers: React.FC = () => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       if (jwt) {
-        const fetchedVolunteers = await getVolunteers(jwt);
+        const fetchedVolunteers = await getVolunteers(jwt, 'volunteer');
         setVolunteers(fetchedVolunteers);
       }
     };
@@ -49,13 +49,13 @@ const Volunteers: React.FC = () => {
 
     if (editingVolunteer) {
       if (editingVolunteer.id) {
-        await updateVolunteer(editingVolunteer.id, volunteerData, jwt!);
+        await updateVolunteer(editingVolunteer.id, volunteerData, jwt!, 'volunteer');
       }
     } else {
-      await createVolunteer(volunteerData, jwt!);
+      await createVolunteer(volunteerData, jwt!, 'volunteer');
     }
 
-    const fetchedVolunteers = await getVolunteers(jwt!);
+    const fetchedVolunteers = await getVolunteers(jwt!, 'volunteer');
     setVolunteers(fetchedVolunteers);
     setModalOpened(false);
     setForm({
@@ -125,8 +125,8 @@ const Volunteers: React.FC = () => {
             color="red"
             onClick={async () => {
               if (volunteerToDelete !== null) {
-                await deleteVolunteer(volunteerToDelete, jwt!);
-                const fetchedVolunteers = await getVolunteers(jwt!);
+                await deleteVolunteer(volunteerToDelete, jwt!, 'volunteer');
+                const fetchedVolunteers = await getVolunteers(jwt!, 'volunteer');
                 setVolunteers(fetchedVolunteers);
               }
               setConfirmDeleteModalOpened(false);
