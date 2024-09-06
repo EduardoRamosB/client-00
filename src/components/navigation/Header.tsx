@@ -6,6 +6,7 @@ import classes from './Header.module.css';
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 import { LogOut } from "../../api/users.api.ts";
+import { User } from "../../types.ts";
 
 interface LinkItem {
   id: string;
@@ -36,10 +37,10 @@ const publicLinks: PublicLink[] = [
   },
 ];
 
-const links = [
+const getLinks = (userFullName: string, role: string) => [
   {
     id: '#1',
-    label: 'Welcome',
+    label: `Bienvenido ${userFullName} (${role})`,
     links: [
       { id: '#l1', link: '/faq', label: 'Profile' },
       { id: '#l2', link: '/forums', label: 'Logout' },
@@ -50,9 +51,10 @@ const links = [
 interface IHeaderProps {
   from: string;
   onBurgerClick: () => void;
+  user: User
 }
 
-export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
+export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick, user }) => {
   const [opened] = useDisclosure(false);
   const { jwt, refresh_token, logout } = useAuth();
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick }) => {
     }
   };
 
-  const selectedLinks = from === 'authenticated' ? links : publicLinks;
+  const selectedLinks = from === 'authenticated' ? getLinks(user.full_name, user!.role!) : publicLinks;
   const items = selectedLinks.map((link) => {
     // Handle authenticated links with sub-links
     if ('links' in link && link.links) {

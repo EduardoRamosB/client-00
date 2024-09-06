@@ -126,9 +126,10 @@ const Animals: React.FC = () => {
     <Layout user={user} from="authenticated">
       <Group mb="md">
         <h1>Animales</h1>
-        <Button leftSection={<IconPlus />} onClick={() => setModalOpened(true)}>
-          Agregar
-        </Button>
+        {user.role === 'admin' &&
+          <Button leftSection={<IconPlus />} onClick={() => setModalOpened(true)}>
+            Agregar
+          </Button>}
       </Group>
 
       <AnimalTable

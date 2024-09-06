@@ -44,6 +44,7 @@ const Layout: React.FC<ILayoutProps> = ({ user, from, children }) => {
                 <Header
                   from={from}
                   onBurgerClick={openDrawer}
+                  user={user}
                 />
               </Grid.Col>
               <Grid.Col span={12}>

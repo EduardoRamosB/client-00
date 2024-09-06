@@ -68,7 +68,7 @@ const Sidebar: React.FC<ISidebar> = ({ user }) => {
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
-          <Code fw={700}>v3.1.2</Code>
+          <Code fw={700}>TAILS WORLD</Code>
         </Group>
         {links}
       </div>

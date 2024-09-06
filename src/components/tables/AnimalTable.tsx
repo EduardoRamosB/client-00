@@ -17,13 +17,27 @@ const AnimalTable: React.FC<IAnimalTableProps> = ({ user, animals, handleEdit, h
   const [scrolled, setScrolled] = React.useState(false);
   const { role } = user;
 
+  const statusOptions = [
+    { value: 'waiting', label: 'Esperando revisiones' },
+    { value: 'available', label: 'Listo para Adoptar' },
+    { value: 'pending', label: 'En Proceso de adopcion' },
+    { value: 'adopted', label: 'Adoptado' },
+    { value: 'aggressive', label: 'Agresivo no adoptable' },
+    { value: 'returned', label: 'Regresado de adopcion' }
+  ];
+
+  const getStatusLabel = (status: string) => {
+    const option = statusOptions.find((opt) => opt.value === status);
+    return option ? option.label : status;
+  };
+
   const rows = animals.map((row) => (
     <Table.Tr key={row.id}>
       <Table.Td>{row.name}</Table.Td>
       <Table.Td>{row.age}</Table.Td>
       <Table.Td>{row.breed}</Table.Td>
       <Table.Td>{row.kind}</Table.Td>
-      <Table.Td>{row.status}</Table.Td>
+      <Table.Td>{getStatusLabel(row.status)}</Table.Td>
       <Table.Td>
         <Group>
           {(role === 'admin' || role === 'volunteer') &&

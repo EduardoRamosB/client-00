@@ -3,11 +3,12 @@ import Layout from "../components/layout/Layout.tsx";
 import { useAuth } from "../hooks/useAuth.tsx";
 import { getVolunteers, createVolunteer, updateVolunteer, deleteVolunteer } from "../api/users.api.ts";
 import { User } from "../types.ts";
-import { Button, Modal, Group } from "@mantine/core";
+import {Button, Modal, Group, Overlay, Center, Loader} from "@mantine/core";
 import UsersForm from "../components/forms/UsersForm.tsx";
 import UsersTable from "../components/tables/UsersTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
 import {useLocation} from "react-router-dom";
+import {getAdoptions} from "../api/adoptions.api.ts";
 
 const Users: React.FC = () => {
   const { user, jwt } = useAuth();
@@ -26,8 +27,38 @@ const Users: React.FC = () => {
   });
   const [confirmDeleteModalOpened, setConfirmDeleteModalOpened] = useState(false);
   const [volunteerToDelete, setVolunteerToDelete] = useState<number | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
+    if (user) {
+      setLoadingUser(false);
+      const fetchVolunteers = async () => {
+        if (jwt) {
+          console.log('role:', role)
+          const fetchedVolunteers = await getVolunteers(jwt, role!);
+          setVolunteers(fetchedVolunteers);
+        }
+      };
+
+      fetchVolunteers();
+    }
+  }, [user]);
+
+  if (loadingUser) {
+    return (
+      <Overlay
+        style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 1000 }}
+        opacity={0.6} // Darken the background
+        color="#000" // Background color
+      >
+        <Center style={{ height: "100vh" }}>
+          <Loader size="xl" color="blue" variant="dots" /> {/* Large Loader */}
+        </Center>
+      </Overlay>
+    );
+  }
+
+  /*useEffect(() => {
     const fetchVolunteers = async () => {
       if (jwt) {
         console.log('role:', role)
@@ -37,7 +68,7 @@ const Users: React.FC = () => {
     };
 
     fetchVolunteers();
-  }, [jwt, role]);
+  }, [jwt, role]);*/
 
   const handleSubmit = async () => {
     if (!user?.id) {
@@ -106,12 +137,14 @@ const Users: React.FC = () => {
     <Layout user={user} from="authenticated">
       <Group mb="md">
         <h1>{role === 'volunteer' ? 'Voluntarios' : 'Adopantes'}</h1>
-        <Button leftSection={<IconPlus />} onClick={() => setModalOpened(true)}>
-          Agregar
-        </Button>
+        {user.role === 'admin' &&
+          <Button leftSection={<IconPlus />} onClick={() => setModalOpened(true)}>
+            Agregar
+          </Button>}
       </Group>
 
       <UsersTable
+        user={user}
         users={volunteers}
         handleEdit={handleEdit}
         handleDeleteClick={handleDeleteClick}

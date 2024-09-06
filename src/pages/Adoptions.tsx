@@ -1,74 +1,68 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/layout/Layout.tsx";
 import { useAuth } from "../hooks/useAuth.tsx";
-import { getAdoptions, createAdoption, updateAdoption, deleteAdoption } from "../api/adoptions.api.ts";
+import { getAdoptions, updateAdoptionStatus, deleteAdoption } from "../api/adoptions.api.ts";
 import { Adoption } from "../types.ts";
-import { Button, Modal, Group } from "@mantine/core";
-import AdoptionForm from "../components/forms/AdoptionForm.tsx";
+import { Button, Modal, Group, Center, Loader, Overlay, Select, Text } from "@mantine/core";
 import AdoptionTable from "../components/tables/AdoptionTable.tsx";
-import {IconPlus} from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 
 const Adoptions: React.FC = () => {
   const { user, jwt } = useAuth();
   const [adoptions, setAdoptions] = useState<Adoption[]>([]);
   const [modalOpened, setModalOpened] = useState(false);
   const [editingAdoption, setEditingAdoption] = useState<Adoption | null>(null);
-
-  const [form, setForm] = useState({
-    animal: 0,
-    volunteer: 0,
-    adopter: 0,
-    status: '',
-  });
-
+  const [editedStatus, setEditedStatus] = useState<string>('');
   const [confirmDeleteModalOpened, setConfirmDeleteModalOpened] = useState(false);
   const [adoptionToDelete, setAdoptionToDelete] = useState<number | null>(null);
+  const [loadingUser, setLoadingUser] = useState(true);
 
   useEffect(() => {
-    const fetchAdoptions = async () => {
-      const fetchedAdoptions = await getAdoptions();
-      setAdoptions(fetchedAdoptions);
-    };
-
-    fetchAdoptions();
-  }, []);
-
-  const handleSubmit = async () => {
-    if (!user?.id) {
-      console.error("User ID is not available.");
-      return;
+    if (user) {
+      setLoadingUser(false);
+      const fetchAdoptions = async () => {
+        const fetchedAdoptions = await getAdoptions();
+        setAdoptions(fetchedAdoptions);
+      };
+      fetchAdoptions();
     }
+  }, [user]);
 
-    const adoptionData: Adoption = {
-      ...form,
-      created_by_id: !editingAdoption ? user.id : undefined,
-      updated_by_id: user.id
-    };
+  if (loadingUser) {
+    return (
+      <Overlay
+        style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", zIndex: 1000 }}
+        opacity={0.6} // Darken the background
+        color="#000" // Background color
+      >
+        <Center style={{ height: "100vh" }}>
+          <Loader size="xl" color="blue" variant="dots" /> {/* Large Loader */}
+        </Center>
+      </Overlay>
+    );
+  }
 
-    if (editingAdoption) {
-      if (editingAdoption.id) {
-        await updateAdoption(editingAdoption.id, adoptionData, jwt!);
+  const handleSaveStatus = async () => {
+    if (editingAdoption && editedStatus) {
+      try {
+        await updateAdoptionStatus(editingAdoption.id!, editedStatus, jwt!);
+        setModalOpened(false);
+        const fetchedAdoptions = await getAdoptions();
+        setAdoptions(fetchedAdoptions);
+      } catch (error) {
+        console.error("Error al actualizar el estado:", error);
       }
-    } else {
-      await createAdoption(adoptionData, jwt!);
     }
-
-    const fetchedAdoptions = await getAdoptions();
-    setAdoptions(fetchedAdoptions);
-    setModalOpened(false);
-    setForm({ animal: 0, volunteer: 0, adopter: 0, status: '' });
-    setEditingAdoption(null);
   };
 
-  const handleEdit = (adoption: Adoption) => {
-    setEditingAdoption(adoption);
-    setForm({
-      animal: adoption.animal,
-      volunteer: adoption.volunteer,
-      adopter: adoption.adopter,
-      status: adoption.status,
-    });
-    setModalOpened(true);
+  const handleEdit = async (adoption: Adoption) => {
+    console.log('adoption:', adoption)
+    if (adoption) {
+      console.log('status:', adoption.status);
+      await updateAdoptionStatus(adoption.id!, adoption.status, user!.id!, jwt!);
+      const fetchedAdoptions = await getAdoptions();
+      setAdoptions(fetchedAdoptions);
+    }
   };
 
   const handleDeleteClick = (id: number) => {
@@ -80,50 +74,59 @@ const Adoptions: React.FC = () => {
     <Layout user={user} from="authenticated">
       <Group mb="md">
         <h1>Adopciones</h1>
-        <Button leftSection={<IconPlus />} onClick={() => setModalOpened(true)}>
-          Agregar
-        </Button>
       </Group>
 
       <AdoptionTable
+        user={user}
         adoptions={adoptions}
         handleEdit={handleEdit}
-        handleDeleteClick={handleDeleteClick}/>
+        jwt={jwt!}
+      />
 
       <Modal
         opened={modalOpened}
         onClose={() => setModalOpened(false)}
         title={editingAdoption ? 'Editar Adopción' : 'Agregar Adopción'}
       >
-        <AdoptionForm
-          form={form}
-          setForm={setForm}
-          onSubmit={handleSubmit}
-          editingAdoption={editingAdoption}
-        />
+        {editingAdoption && (
+          <Group direction="column">
+            <Select
+              value={editedStatus}
+              onChange={setEditedStatus}
+              data={[
+                { value: 'requested', label: 'Solicitado' },
+                { value: 'in_progress', label: 'En Progreso' },
+                { value: 'completed', label: 'Adoptado' },
+                { value: 'cancelled', label: 'Cancelado' }
+              ]}
+            />
+            <Button onClick={handleSaveStatus}>Guardar</Button>
+          </Group>
+        )}
       </Modal>
 
       <Modal
         opened={confirmDeleteModalOpened}
         onClose={() => setConfirmDeleteModalOpened(false)}
-        title="Confirmar Eliminación"
+        title="Confirmar eliminación"
       >
-        <p>¿Estás seguro de que deseas eliminar esta adopción?</p>
-        <Group align ="center" mt="md">
-          <Button onClick={() => setConfirmDeleteModalOpened(false)}>Cancelar</Button>
+        <Text>¿Estás seguro de que deseas eliminar esta adopción?</Text>
+        <Group position="right" mt="md">
           <Button
-            color="red"
             onClick={async () => {
-              if (adoptionToDelete !== null) {
+              if (adoptionToDelete) {
                 await deleteAdoption(adoptionToDelete, jwt!);
+                setAdoptionToDelete(null);
+                setConfirmDeleteModalOpened(false);
                 const fetchedAdoptions = await getAdoptions();
                 setAdoptions(fetchedAdoptions);
               }
-              setConfirmDeleteModalOpened(false);
-              setAdoptionToDelete(null);
             }}
           >
             Eliminar
+          </Button>
+          <Button variant="outline" onClick={() => setConfirmDeleteModalOpened(false)}>
+            Cancelar
           </Button>
         </Group>
       </Modal>
