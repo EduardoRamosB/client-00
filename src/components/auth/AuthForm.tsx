@@ -36,14 +36,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLo
               <Controller
                 name="role"
                 control={control}
-                rules={{ required: "Role is required" }}
+                rules={{ required: "Rol es requerido" }}
                 render={({ field }) => (
                   <Select
-                    label="Role"
-                    placeholder="Select role"
+                    label="Rol"
+                    placeholder="Seleccione rol"
                     data={[
-                      { value: 'volunteer', label: 'Volunteer' },
-                      { value: 'adoptant', label: 'Adoptant' }
+                      { value: 'volunteer', label: 'Voluntario' },
+                      { value: 'adopter', label: 'Adoptante' }
                     ]}
                     {...field}
                     error={errors.role?.message}
@@ -55,21 +55,21 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLo
             {fields.username && (
               <TextInput
                 label="Username"
-                placeholder="Input username"
-                {...register("username", { required: "Username is required" })}
+                placeholder="Ingrese username"
+                {...register("username", { required: "Username es requerido" })}
                 error={errors.username?.message}
               />
             )}
 
             <TextInput
               label="Email"
-              placeholder="Input email"
+              placeholder="Ingrese email"
               type="email"
               {...register("email", {
-                required: "Email is required",
+                required: "Email es requerido",
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Invalid email address"
+                  message: "Email no valido"
                 }
               })}
               error={errors.email?.message}
@@ -77,15 +77,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLo
 
             <PasswordInput
               label="Password"
-              description="At least 8 chars."
-              placeholder="Input password"
+              description="Al menos 8 caracteres."
+              placeholder="Ingrese password"
               visible={visible}
               onVisibilityChange={toggle}
               {...register("password", {
-                required: "Password is required",
+                required: "Password es requerido",
                 minLength: {
                   value: 8,
-                  message: "Password must be at least 8 characters long"
+                  message: "Password debe tener al menos 8 caracteres"
                 }
               })}
               error={errors.password?.message}
@@ -93,16 +93,16 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLo
 
             {fields.confirmPassword && (
               <PasswordInput
-                label="Confirm Password"
-                description="Must be equal to password"
-                placeholder="Retype password"
+                label="Confirmar Password"
+                description="Debe ser igual al Password"
+                placeholder="Reingrese password"
                 visible={visible}
                 onVisibilityChange={toggle}
                 {...register("confirmPassword", {
-                  validate: value => value === password || "Passwords must match",
+                  validate: value => value === password || "Passwords deben ser iguales",
                   minLength: {
                     value: 8,
-                    message: "Confirm password must be at least 8 characters long"
+                    message: "Confirm password debe tener al menos 8 caracteres"
                   }
                 })}
                 error={errors.confirmPassword?.message}

@@ -39,7 +39,7 @@ const SignUp: React.FC = () => {
   };
 
   return (
-    <Layout from="public">
+    <Layout user={null} from="public">
       <Center>
         <h1>Sign up</h1>
       </Center>

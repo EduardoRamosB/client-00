@@ -26,6 +26,16 @@ interface AnimalFormProps {
 const AnimalForm: React.FC<AnimalFormProps> = ({ form, setForm, onSubmit, editingAnimal }) => {
   return (
     <>
+      <Select
+        label="Tipo"
+        data={[
+          { value: 'dog', label: 'Perro' },
+          { value: 'cat', label: 'Gato' }
+        ]}
+        value={form.kind}
+        onChange={(value) => setForm({ ...form, kind: value! })}
+        required
+      />
       <TextInput
         label="Nombre"
         value={form.name}
@@ -42,16 +52,6 @@ const AnimalForm: React.FC<AnimalFormProps> = ({ form, setForm, onSubmit, editin
         label="Raza"
         value={form.breed}
         onChange={(e) => setForm({ ...form, breed: e.target.value })}
-        required
-      />
-      <Select
-        label="Tipo"
-        data={[
-          { value: 'dog', label: 'Perro' },
-          { value: 'cat', label: 'Gato' }
-        ]}
-        value={form.kind}
-        onChange={(value) => setForm({ ...form, kind: value! })}
         required
       />
       <Select
