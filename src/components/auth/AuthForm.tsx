@@ -1,13 +1,14 @@
 import React from "react";
-import { Card, Container, Stack, TextInput, PasswordInput, Button } from "@mantine/core";
+import { Card, Container, Stack, TextInput, PasswordInput, Button, Select } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 interface FormValues {
   email: string;
   password: string;
   confirmPassword?: string;
   username?: string;
+  role?: string;
 }
 
 interface AuthFormProps {
@@ -15,13 +16,14 @@ interface AuthFormProps {
   fields: {
     username?: boolean;
     confirmPassword?: boolean;
+    role?: boolean;
   };
   submitLabel: string;
   isLoading: boolean;
 }
 
 const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLoading }) => {
-  const { register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
+  const { control, register, handleSubmit, formState: { errors }, watch } = useForm<FormValues>();
   const [visible, { toggle }] = useDisclosure(false);
   const password = watch("password");
 
@@ -30,6 +32,26 @@ const AuthForm: React.FC<AuthFormProps> = ({ onSubmit, fields, submitLabel, isLo
       <Card shadow="sm" padding="lg" radius="md" withBorder style={{ width: '100%' }}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack mt="md">
+            {fields.role && (
+              <Controller
+                name="role"
+                control={control}
+                rules={{ required: "Role is required" }}
+                render={({ field }) => (
+                  <Select
+                    label="Role"
+                    placeholder="Select role"
+                    data={[
+                      { value: 'volunteer', label: 'Volunteer' },
+                      { value: 'adoptant', label: 'Adoptant' }
+                    ]}
+                    {...field}
+                    error={errors.role?.message}
+                  />
+                )}
+              />
+            )}
+
             {fields.username && (
               <TextInput
                 label="Username"
