@@ -9,7 +9,7 @@ interface VolunteerFormProps {
   editingVolunteer: User | null;
 }
 
-const VolunteerForm: React.FC<VolunteerFormProps> = ({ form, setForm, onSubmit, editingVolunteer }) => {
+const UsersForm: React.FC<VolunteerFormProps> = ({ form, setForm, onSubmit, editingVolunteer }) => {
   const [notification, setNotification] = useState<{ message: string; color: string } | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,4 +116,4 @@ const VolunteerForm: React.FC<VolunteerFormProps> = ({ form, setForm, onSubmit, 
   );
 };
 
-export default VolunteerForm;
+export default UsersForm;

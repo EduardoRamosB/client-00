@@ -13,7 +13,7 @@ import { AuthProvider } from "./hooks/useAuth.tsx";
 import ProtectedRoutes from "./components/navigation/ProtectedRoutes";
 import Animals from "./pages/Animals.tsx";
 import Adoptions from "./pages/Adoptions.tsx";
-import Volunteers from "./pages/Volunteers.tsx";
+import Users from "./pages/Users.tsx";
 
 const App: React.FC = () => {
   return (
@@ -30,7 +30,7 @@ const App: React.FC = () => {
               <Route path="/users/dashboard" element={<Dashboard />} />
               <Route path="/users/animals" element={<Animals />} />
               <Route path="/users/adoptions" element={<Adoptions />} />
-              <Route path="/users/volunteers" element={<Volunteers />} />
+              <Route path="/users/volunteer" element={<Users />} />
             </Route>
           </Routes>
         </BrowserRouter>

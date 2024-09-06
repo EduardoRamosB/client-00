@@ -45,7 +45,7 @@ export const getUserInfo = async (jwt: string): Promise<{ data: User }> => {
   return await usersApi.get(`user_info/`, config);
 };
 
-/**** Volunteers *****/
+/**** Users *****/
 export const getVolunteers = async (jwt: string, role: string): Promise<User[]> => {
   const config = {
     headers: {

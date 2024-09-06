@@ -4,19 +4,23 @@ import { useAuth } from "../hooks/useAuth.tsx";
 import { getVolunteers, createVolunteer, updateVolunteer, deleteVolunteer } from "../api/users.api.ts";
 import { User } from "../types.ts";
 import { Button, Modal, Group } from "@mantine/core";
-import VolunteerForm from "../components/forms/VolunteerForm.tsx";
-import VolunteerTable from "../components/tables/VolunteerTable.tsx";
+import UsersForm from "../components/forms/UsersForm.tsx";
+import UsersTable from "../components/tables/UsersTable.tsx";
 import { IconPlus } from "@tabler/icons-react";
+import {useLocation} from "react-router-dom";
 
-const Volunteers: React.FC = () => {
+const Users: React.FC = () => {
   const { user, jwt } = useAuth();
   const [volunteers, setVolunteers] = useState<User[]>([]);
   const [modalOpened, setModalOpened] = useState(false);
   const [editingVolunteer, setEditingVolunteer] = useState<User | null>(null);
+  const location = useLocation()
+  const role = location.pathname.split("/").pop();
+  const st = role === 'volunteer' ? 'Voluntario' : 'Adoptante'
   const [form, setForm] = useState<User>({
     username: '',
     email: '',
-    role: 'volunteer',
+    role,
     first_name: '',
     last_name: '',
   });
@@ -26,7 +30,7 @@ const Volunteers: React.FC = () => {
   useEffect(() => {
     const fetchVolunteers = async () => {
       if (jwt) {
-        const fetchedVolunteers = await getVolunteers(jwt, 'volunteer');
+        const fetchedVolunteers = await getVolunteers(jwt, role!);
         setVolunteers(fetchedVolunteers);
       }
     };
@@ -49,19 +53,19 @@ const Volunteers: React.FC = () => {
 
     if (editingVolunteer) {
       if (editingVolunteer.id) {
-        await updateVolunteer(editingVolunteer.id, volunteerData, jwt!, 'volunteer');
+        await updateVolunteer(editingVolunteer.id, volunteerData, jwt!, role!);
       }
     } else {
-      await createVolunteer(volunteerData, jwt!, 'volunteer');
+      await createVolunteer(volunteerData, jwt!, role!);
     }
 
-    const fetchedVolunteers = await getVolunteers(jwt!, 'volunteer');
+    const fetchedVolunteers = await getVolunteers(jwt!, role!);
     setVolunteers(fetchedVolunteers);
     setModalOpened(false);
     setForm({
       username: '',
       email: '',
-      role: 'volunteer',
+      role,
       first_name: '',
       last_name: '',
     });
@@ -85,16 +89,28 @@ const Volunteers: React.FC = () => {
     setConfirmDeleteModalOpened(true);
   };
 
+  const handleCloseModal = () => {
+    setEditingVolunteer(null);
+    setForm({
+      username: '',
+      email: '',
+      role,
+      first_name: '',
+      last_name: '',
+    })
+    setModalOpened(false)
+  }
+
   return (
     <Layout user={user} from="authenticated">
       <Group mb="md">
-        <h1>Voluntarios</h1>
+        <h1>{role === 'volunteer' ? 'Voluntarios' : 'Adopantes'}</h1>
         <Button leftSection={<IconPlus />} onClick={() => setModalOpened(true)}>
           Agregar
         </Button>
       </Group>
 
-      <VolunteerTable
+      <UsersTable
         users={volunteers}
         handleEdit={handleEdit}
         handleDeleteClick={handleDeleteClick}
@@ -102,10 +118,12 @@ const Volunteers: React.FC = () => {
 
       <Modal
         opened={modalOpened}
-        onClose={() => setModalOpened(false)}
-        title={editingVolunteer ? 'Editar Voluntario' : 'Agregar Voluntario'}
+        onClose={handleCloseModal}
+        title={editingVolunteer ?
+          `Editar ${st}` :
+          `Agregar ${st}`}
       >
-        <VolunteerForm
+        <UsersForm
           form={form}
           setForm={setForm}
           onSubmit={handleSubmit}
@@ -118,15 +136,15 @@ const Volunteers: React.FC = () => {
         onClose={() => setConfirmDeleteModalOpened(false)}
         title="Confirmar Eliminación"
       >
-        <p>¿Estás seguro de que deseas eliminar este voluntario?</p>
+        <p>{`¿Estás seguro de que deseas eliminar este ${st}?`}</p>
         <Group align="center" mt="md">
           <Button onClick={() => setConfirmDeleteModalOpened(false)}>Cancelar</Button>
           <Button
             color="red"
             onClick={async () => {
               if (volunteerToDelete !== null) {
-                await deleteVolunteer(volunteerToDelete, jwt!, 'volunteer');
-                const fetchedVolunteers = await getVolunteers(jwt!, 'volunteer');
+                await deleteVolunteer(volunteerToDelete, jwt!, role!);
+                const fetchedVolunteers = await getVolunteers(jwt!, role!);
                 setVolunteers(fetchedVolunteers);
               }
               setConfirmDeleteModalOpened(false);
@@ -141,4 +159,4 @@ const Volunteers: React.FC = () => {
   );
 };
 
-export default Volunteers;
+export default Users;
