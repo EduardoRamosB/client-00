@@ -1,53 +1,65 @@
-import {useState} from "react";
+import React, {useState, useEffect} from "react";
 import { Group, Code } from '@mantine/core';
 import {
-  IconBellRinging,
   IconFingerprint,
-  IconKey,
   IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
   IconSwitchHorizontal,
-  IconLogout,
+  IconLogout, IconCalendarHeart, IconUsersGroup, IconHome
 } from '@tabler/icons-react';
-//import { MantineLogo } from '@mantinex/mantine-logo';
 import classes from './NavbarSimple.module.css';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
-const data = [
-  { link: '', label: 'Notifications', icon: IconBellRinging },
-  { link: '', label: 'Billing', icon: IconReceipt2 },
-  { link: '', label: 'Security', icon: IconFingerprint },
-  { link: '', label: 'SSH Keys', icon: IconKey },
-  { link: '', label: 'Databases', icon: IconDatabaseImport },
-  { link: '', label: 'Authentication', icon: Icon2fa },
-  { link: '', label: 'Other Settings', icon: IconSettings },
+// Define the type for icons
+type IconComponent = React.FC<{ className?: string; stroke?: number; }>;
+
+interface NavItem {
+  link: string;
+  label: string;
+  icon: IconComponent;
+}
+
+const data: NavItem[] = [
+  { link: '/users/dashboard', label: 'Dashboard', icon: IconHome as IconComponent },
+  { link: '/users/animals', label: 'Animales', icon: IconFingerprint as IconComponent },
+  { link: '/users/adoptions', label: 'Adopciones', icon: IconCalendarHeart as IconComponent },
+  { link: '/users/volunteers', label: 'Voluntarios', icon: IconUsersGroup as IconComponent },
+  { link: '/settings', label: 'Other Settings', icon: IconSettings as IconComponent },
 ];
 
 const Sidebar = () => {
-  const [active, setActive] = useState('Billing')
+  const [active, setActive] = useState('Dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const currentLink = data.find(item => item.link === location.pathname);
+    if (currentLink) {
+      setActive(currentLink.label);
+    }
+  }, [location.pathname]);
+
+  const handleClickLink = (item: NavItem) => {
+    setActive(item.label);
+    navigate(item.link);
+  }
 
   const links = data.map((item) => (
-    <a
+    <Link
+      key={item.label}
+      to={item.link}
       className={classes.link}
       data-active={item.label === active || undefined}
-      href={item.link}
-      key={item.label}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(item.label);
-      }}
+      onClick={() => handleClickLink(item)}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ));
 
   return (
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between">
-
           <Code fw={700}>v3.1.2</Code>
         </Group>
         {links}
@@ -55,12 +67,12 @@ const Sidebar = () => {
 
       <div className={classes.footer}>
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5}/>
+          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
           <span>Change account</span>
         </a>
 
         <a href="#" className={classes.link} onClick={(event) => event.preventDefault()}>
-          <IconLogout className={classes.linkIcon} stroke={1.5}/>
+          <IconLogout className={classes.linkIcon} stroke={1.5} />
           <span>Logout</span>
         </a>
       </div>
@@ -68,4 +80,4 @@ const Sidebar = () => {
   )
 }
 
-export default Sidebar
+export default Sidebar;

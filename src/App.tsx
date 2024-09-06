@@ -11,6 +11,9 @@ import Dashboard from "./pages/Dashboard";
 import { Notifications } from "@mantine/notifications";
 import { AuthProvider } from "./hooks/useAuth.tsx";
 import ProtectedRoutes from "./components/navigation/ProtectedRoutes";
+import Animals from "./pages/Animals.tsx";
+import Adoptions from "./pages/Adoptions.tsx";
+import Volunteers from "./pages/Volunteers.tsx";
 
 const App: React.FC = () => {
   return (
@@ -25,6 +28,9 @@ const App: React.FC = () => {
 
             <Route element={<ProtectedRoutes />}>
               <Route path="/users/dashboard" element={<Dashboard />} />
+              <Route path="/users/animals" element={<Animals />} />
+              <Route path="/users/adoptions" element={<Adoptions />} />
+              <Route path="/users/volunteers" element={<Volunteers />} />
             </Route>
           </Routes>
         </BrowserRouter>
