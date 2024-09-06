@@ -35,3 +35,12 @@ export const LogOut = async (jwt: string, refresh: string) => {
     return await usersApi.post("logout/", { "refresh": refresh }, config);
   }
 };
+
+export const getUserInfo = async (jwt: string): Promise<{ data: User }> => {
+  const config = {
+    headers: {
+      "Authorization": `Bearer ${jwt}`,
+    },
+  };
+  return await usersApi.get(`user_info/`, config);
+};

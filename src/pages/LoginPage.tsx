@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
     setIsLoading(true)
     try {
       const res = await logIn(data.email, data.password);
-      console.log('res:', res)
+      //console.log('res:', res)
 
       if (res.status === 200) {
         const { id, tokens } = res.data;

@@ -4,10 +4,11 @@ import {
   IconFingerprint,
   IconSettings,
   IconSwitchHorizontal,
-  IconLogout, IconCalendarHeart, IconUsersGroup, IconHome
+  IconLogout, IconCalendarHeart, IconUsersGroup, IconHome, IconUserHeart
 } from '@tabler/icons-react';
 import classes from './NavbarSimple.module.css';
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import {User} from "../../types.ts";
 
 // Define the type for icons
 type IconComponent = React.FC<{ className?: string; stroke?: number; }>;
@@ -16,17 +17,23 @@ interface NavItem {
   link: string;
   label: string;
   icon: IconComponent;
+  roles: string[];
 }
 
 const data: NavItem[] = [
-  { link: '/users/dashboard', label: 'Dashboard', icon: IconHome as IconComponent },
-  { link: '/users/animals', label: 'Animales', icon: IconFingerprint as IconComponent },
-  { link: '/users/adoptions', label: 'Adopciones', icon: IconCalendarHeart as IconComponent },
-  { link: '/users/volunteers', label: 'Voluntarios', icon: IconUsersGroup as IconComponent },
-  { link: '/settings', label: 'Other Settings', icon: IconSettings as IconComponent },
+  { link: '/users/dashboard', label: 'Dashboard', icon: IconHome as IconComponent, roles: ['admin', 'volunteer', 'adopter'] },
+  { link: '/users/animals', label: 'Animales', icon: IconFingerprint as IconComponent, roles: ['admin', 'volunteer', 'adopter'] },
+  { link: '/users/adoptions', label: 'Adopciones', icon: IconCalendarHeart as IconComponent, roles: ['admin', 'volunteer'] },
+  { link: '/users/adopters', label: 'Adoptadores', icon: IconUserHeart as IconComponent, roles: ['admin', 'volunteer'] },
+  { link: '/users/volunteers', label: 'Voluntarios', icon: IconUsersGroup as IconComponent, roles: ['admin'] },
+  { link: '/settings', label: 'Other Settings', icon: IconSettings as IconComponent, roles: ['admin', 'volunteer', 'adopter'] },
 ];
 
-const Sidebar = () => {
+interface ISidebar {
+  user: User | null
+}
+
+const Sidebar: React.FC<ISidebar> = ({ user }) => {
   const [active, setActive] = useState('Dashboard');
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,7 +50,9 @@ const Sidebar = () => {
     navigate(item.link);
   }
 
-  const links = data.map((item) => (
+  const filteredLinks = data.filter((item) => user && item.roles.includes(user.role as string));
+
+  const links = filteredLinks.map((item) => (
     <Link
       key={item.label}
       to={item.link}
