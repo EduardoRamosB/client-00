@@ -1,18 +1,21 @@
-import React, {useState} from "react";
+import React from "react";
 import cx from 'clsx';
-import {ActionIcon, Group, ScrollArea, Table} from "@mantine/core";
+import { ActionIcon, Button, Group, ScrollArea, Table } from "@mantine/core";
 import classes from './AnimalTable.module.css';
-import {IconPencil, IconTrash} from "@tabler/icons-react";
-import {Animal} from "../../types.ts";
+import { IconHeart, IconPencil, IconTrash } from "@tabler/icons-react";
+import { Animal } from "../../types.ts";
 
 interface IAnimalTableProps {
+  user: string | null;
   animals: Animal[];
   handleEdit: (animal: Animal) => void;
   handleDeleteClick: (id: number) => void;
+  handleAdoptClick: (animal: Animal) => void; // Nueva función
 }
 
-const AnimalTable: React.FC<IAnimalTableProps> = ({ animals, handleEdit, handleDeleteClick }) => {
-  const [scrolled, setScrolled] = useState(false);
+const AnimalTable: React.FC<IAnimalTableProps> = ({ user, animals, handleEdit, handleDeleteClick, handleAdoptClick }) => {
+  const [scrolled, setScrolled] = React.useState(false);
+  const { role } = user;
 
   const rows = animals.map((row) => (
     <Table.Tr key={row.id}>
@@ -23,21 +26,34 @@ const AnimalTable: React.FC<IAnimalTableProps> = ({ animals, handleEdit, handleD
       <Table.Td>{row.status}</Table.Td>
       <Table.Td>
         <Group>
-          <ActionIcon color="blue" onClick={() => handleEdit(row)}>
-            <IconPencil size={16} />
-          </ActionIcon>
-          <ActionIcon
-            color="red"
-            onClick={() => {
-              if (row.id !== undefined) {
-                handleDeleteClick(row.id);
-              } else {
-                console.error("Animal ID is indefinido");
-              }
-            }}
-          >
-            <IconTrash size={16} />
-          </ActionIcon>
+          {(role === 'admin' || role === 'volunteer') &&
+            <ActionIcon color="blue" onClick={() => handleEdit(row)}>
+              <IconPencil size={16} />
+            </ActionIcon>}
+
+          {role === 'admin' &&
+            <ActionIcon
+              color="red"
+              onClick={() => {
+                if (row.id !== undefined) {
+                  handleDeleteClick(row.id);
+                } else {
+                  console.error("Animal ID is undefined");
+                }
+              }}
+            >
+              <IconTrash size={16} />
+            </ActionIcon>}
+
+          {role === 'adopter' &&
+            <Button
+              leftSection={<IconHeart size={14} />}
+              variant="filled"
+              color="teal"
+              onClick={() => handleAdoptClick(row)} // Manejo del clic de adopción
+            >
+              Solicitar Adopción
+            </Button>}
         </Group>
       </Table.Td>
     </Table.Tr>
@@ -59,7 +75,7 @@ const AnimalTable: React.FC<IAnimalTableProps> = ({ animals, handleEdit, handleD
         <Table.Tbody>{rows}</Table.Tbody>
       </Table>
     </ScrollArea>
-  )
-}
+  );
+};
 
-export default AnimalTable
+export default AnimalTable;

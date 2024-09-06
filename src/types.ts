@@ -25,7 +25,7 @@ export interface Adoption {
   id?: number;
   date?: string;
   animal: number;
-  volunteer: number;
+  volunteer?: number | null;
   adopter: number;
   status: string;
   created_by_id?: number;

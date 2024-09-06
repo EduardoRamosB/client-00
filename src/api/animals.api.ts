@@ -5,8 +5,8 @@ const api = axios.create({
   baseURL: "http://localhost:8000/api/",
 });
 
-export const getAnimals = async (): Promise<Animal[]> => {
-  const response = await api.get('shelter/animals/');
+export const getAnimals = async (role: string): Promise<Animal[]> => {
+  const response = await api.get(`shelter/animals/?role=${role}`);
   return response.data;
 };
 
@@ -26,22 +26,22 @@ export const createAnimal = async (animal: Animal, jwt: string): Promise<Animal>
   return response.data;
 };
 
-export const updateAnimal = async (id: number, animal: Animal, jwt: string): Promise<Animal> => {
+export const updateAnimal = async (id: number, animal: Animal, jwt: string, role: string): Promise<Animal> => {
   const config = {
     headers: {
       'Authorization': `Bearer ${jwt}`
     }
   };
   console.log('animal:', animal)
-  const response = await api.put(`shelter/animals/${id}/`, animal, config);
+  const response = await api.put(`shelter/animals/${id}/?role=${role}`, animal, config);
   return response.data;
 };
 
-export const deleteAnimal = async (id: number, jwt: string): Promise<void> => {
+export const deleteAnimal = async (id: number, jwt: string,  role: string): Promise<void> => {
   const config = {
     headers: {
       'Authorization': `Bearer ${jwt}`
     }
   };
-  await api.delete(`shelter/animals/${id}/`, config);
+  await api.delete(`shelter/animals/${id}/?role=${role}`, config);
 };
