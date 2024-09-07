@@ -98,13 +98,19 @@ const AdoptionTable: React.FC<AdoptionTableProps> = ({ user, adoptions, handleEd
 
       <Table.Td>
         <Progress.Root size="xl">
-          <Progress.Section value={adoption.status === 'requested' ? 33 : 0} color="cyan">
+          <Progress.Section
+            value={adoption.status === 'requested' ? 33 : (adoption.status === 'in_progress' ? 33 : (adoption.status === 'completed' ? 33 : 0))}
+            color={adoption.status === 'completed' ? 'green' : 'cyan'}>
             <Progress.Label>Solicitado</Progress.Label>
           </Progress.Section>
-          <Progress.Section value={adoption.status === 'in_progress' ? 33 : 0} color="blue">
+          <Progress.Section
+            value={adoption.status === 'in_progress' ? 33 : (adoption.status === 'completed' ? 33 : 0)}
+            color={adoption.status === 'completed' ? 'green' : (adoption.status === 'in_progress' ? 'cyan' : 'transparent')}>
             <Progress.Label>En Proceso</Progress.Label>
           </Progress.Section>
-          <Progress.Section value={adoption.status === 'completed' ? 34 : 0} color="green">
+          <Progress.Section
+            value={adoption.status === 'completed' ? 34 : 0}
+            color={adoption.status === 'completed' ? 'green' : 'transparent'}>
             <Progress.Label>Adoptado</Progress.Label>
           </Progress.Section>
         </Progress.Root>
