@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Animal } from '../types';
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export const getAnimals = async (role: string): Promise<Animal[]> => {

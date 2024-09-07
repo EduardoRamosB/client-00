@@ -2,7 +2,7 @@ import axios from 'axios';
 import { User } from "../types.ts";
 
 const usersApi = axios.create({
-  baseURL: "http://localhost:8000/api/",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 export const logIn = async (email: string, password: string) => {
