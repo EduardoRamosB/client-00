@@ -124,8 +124,6 @@ const Animals: React.FC = () => {
     }
   };
 
-
-
   return (
     <Layout user={user} from="authenticated">
       <Group mb="md">
@@ -141,7 +139,7 @@ const Animals: React.FC = () => {
         animals={animals}
         handleEdit={handleEdit}
         handleDeleteClick={handleDeleteClick}
-        handleAdoptClick={handleAdoptClick} // Pasamos la función al AnimalTable
+        handleAdoptClick={handleAdoptClick}
       />
 
       <Modal

@@ -10,7 +10,7 @@ interface IAnimalTableProps {
   animals: Animal[];
   handleEdit: (animal: Animal) => void;
   handleDeleteClick: (id: number) => void;
-  handleAdoptClick: (animal: Animal) => void; // Nueva función
+  handleAdoptClick: (animal: Animal) => void;
 }
 
 const AnimalTable: React.FC<IAnimalTableProps> = ({ user, animals, handleEdit, handleDeleteClick, handleAdoptClick }) => {
