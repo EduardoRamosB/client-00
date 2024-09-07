@@ -4,8 +4,8 @@ import '@testing-library/jest-dom';
 import AnimalTable from "./AnimalTable.tsx";
 
 const mockAnimals = [
-  { id: 1, name: 'Max', age: 2, breed: 'Bulldog', kind: 'Dog', status: 'available' },
-  { id: 2, name: 'Whiskers', age: 3, breed: 'Siamese', kind: 'Cat', status: 'waiting' }
+  { id: 1, name: 'Patita', age: 2, breed: 'Bulldog', kind: 'Dog', status: 'available' },
+  { id: 2, name: 'Chispita', age: 3, breed: 'Siamese', kind: 'Cat', status: 'waiting' }
 ];
 
 describe('AnimalTable component', () => {
@@ -21,9 +21,9 @@ describe('AnimalTable component', () => {
     );
 
     // Verificamos que el nombre del primer animal esté en el documento
-    expect(screen.getByText('Max')).toBeInTheDocument();
+    expect(screen.getByText('Patita')).toBeInTheDocument();
 
     // Verificamos que el nombre del segundo animal esté en el documento
-    expect(screen.getByText('Whiskers')).toBeInTheDocument();
+    expect(screen.getByText('Chispita')).toBeInTheDocument();
   });
 });
