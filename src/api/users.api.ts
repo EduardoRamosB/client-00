@@ -53,7 +53,7 @@ export const getVolunteers = async (jwt: string, role: string): Promise<User[]> 
     }
   };
   const response = await usersApi.get(`users/${role}/`, config);
-  console.log('response.data:', response.data)
+  //console.log('response.data:', response.data)
   return response.data;
 };
 

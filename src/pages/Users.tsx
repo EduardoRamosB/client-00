@@ -34,7 +34,7 @@ const Users: React.FC = () => {
       setLoadingUser(false);
       const fetchVolunteers = async () => {
         if (jwt) {
-          console.log('role:', role)
+          console.log('role:', role);
           const fetchedVolunteers = await getVolunteers(jwt, role!);
           setVolunteers(fetchedVolunteers);
         }
@@ -42,7 +42,7 @@ const Users: React.FC = () => {
 
       fetchVolunteers();
     }
-  }, [user]);
+  }, [user, jwt, role]);
 
   if (loadingUser) {
     return (

@@ -13,9 +13,9 @@ interface IVolunteerTableProps {
 const UsersTable: React.FC<IVolunteerTableProps> = ({ user, users, handleEdit, handleDeleteClick }) => {
   const [userRole, setUserRole] = useState(user.role)
   useEffect(() => {
-    console.log('USER ROLE:', user.role)
+    //console.log('USER ROLE:', user.role)
   }, []);
-  console.log('user T:', user.role)
+  //console.log('user T:', user.role)
   const rows = users.map((user) => {
     return (
       <Table.Tr key={user.id} >
