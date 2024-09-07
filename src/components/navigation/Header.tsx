@@ -126,9 +126,10 @@ export const Header: React.FC<IHeaderProps> = ({ from, onBurgerClick, user }) =>
       <Container size="lg">
         <div className={classes.inner}>
           <Group className={classes.leftItems}>
-            <Link to='/' className={classes.link}>
-              Home
-            </Link>
+            {from === 'public' &&
+              <Link to='/' className={classes.link}>
+                Home
+              </Link>}
           </Group>
           <Group className={classes.rightItems}>
             {items}
