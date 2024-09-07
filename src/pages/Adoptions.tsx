@@ -21,7 +21,7 @@ const Adoptions: React.FC = () => {
     if (user) {
       setLoadingUser(false);
       const fetchAdoptions = async () => {
-        const fetchedAdoptions = await getAdoptions();
+        const fetchedAdoptions = await getAdoptions(user.id, user.role);
         setAdoptions(fetchedAdoptions);
       };
       fetchAdoptions();
@@ -47,7 +47,7 @@ const Adoptions: React.FC = () => {
       try {
         await updateAdoptionStatus(editingAdoption.id!, editedStatus, jwt!);
         setModalOpened(false);
-        const fetchedAdoptions = await getAdoptions();
+        const fetchedAdoptions = await getAdoptions(user.id, user.role);
         setAdoptions(fetchedAdoptions);
       } catch (error) {
         console.error("Error al actualizar el estado:", error);
@@ -60,7 +60,7 @@ const Adoptions: React.FC = () => {
     if (adoption) {
       console.log('status:', adoption.status);
       await updateAdoptionStatus(adoption.id!, adoption.status, user!.id!, jwt!);
-      const fetchedAdoptions = await getAdoptions();
+      const fetchedAdoptions = await getAdoptions(user.id, user.role);
       setAdoptions(fetchedAdoptions);
     }
   };
@@ -118,7 +118,7 @@ const Adoptions: React.FC = () => {
                 await deleteAdoption(adoptionToDelete, jwt!);
                 setAdoptionToDelete(null);
                 setConfirmDeleteModalOpened(false);
-                const fetchedAdoptions = await getAdoptions();
+                const fetchedAdoptions = await getAdoptions(user.id, user.role);
                 setAdoptions(fetchedAdoptions);
               }
             }}

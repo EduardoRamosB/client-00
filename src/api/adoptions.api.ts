@@ -5,9 +5,14 @@ const api = axios.create({
   baseURL: "http://localhost:8000/api/",
 });
 
-export const getAdoptions = async (): Promise<Adoption[]> => {
-  const response = await api.get('shelter/adoptions/');
-  console.log('response:', response.data)
+export const getAdoptions = async (userId: number, role: string): Promise<Adoption[]> => {
+  const response = await api.get('shelter/adoptions/', {
+    params: {
+      user_id: userId,
+      role: role
+    }
+  });
+  console.log('response:', response.data);
   return response.data;
 };
 

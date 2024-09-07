@@ -107,20 +107,24 @@ const Animals: React.FC = () => {
   const handleConfirmAdopt = async () => {
     if (user?.id && animalToAdopt) {
       const adoption = {
-        animal: animalToAdopt.id,
-        adopter: user.id,
+        animal: animalToAdopt.id,  // Solo el ID del animal
+        adopter: user.id,          // Solo el ID del adoptante
         volunteer: null,
         status: "requested",
-        "created_by_id": user.id,
-        "updated_by_id": user.id
+        created_by_id: user.id,
+        updated_by_id: user.id
       };
-      console.log('adoption:', adoption)
+
+      console.log('adoption:', adoption);
+
       await createAdoption(adoption, jwt!);
       setConfirmAdoptModalOpened(false);
       const fetchedAnimals = await getAnimals(user.role);
       setAnimals(fetchedAnimals);
     }
   };
+
+
 
   return (
     <Layout user={user} from="authenticated">

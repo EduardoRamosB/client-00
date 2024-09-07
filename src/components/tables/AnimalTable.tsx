@@ -20,6 +20,7 @@ const AnimalTable: React.FC<IAnimalTableProps> = ({ user, animals, handleEdit, h
   const statusOptions = [
     { value: 'waiting', label: 'Esperando revisiones' },
     { value: 'available', label: 'Listo para Adoptar' },
+    { value: 'requested', label: 'Solicitado para adpción' },
     { value: 'pending', label: 'En Proceso de adopcion' },
     { value: 'adopted', label: 'Adoptado' },
     { value: 'aggressive', label: 'Agresivo no adoptable' },
@@ -64,7 +65,7 @@ const AnimalTable: React.FC<IAnimalTableProps> = ({ user, animals, handleEdit, h
               leftSection={<IconHeart size={14} />}
               variant="filled"
               color="teal"
-              onClick={() => handleAdoptClick(row)} // Manejo del clic de adopción
+              onClick={() => handleAdoptClick(row)}
             >
               Solicitar Adopción
             </Button>}
@@ -74,7 +75,7 @@ const AnimalTable: React.FC<IAnimalTableProps> = ({ user, animals, handleEdit, h
   ));
 
   return (
-    <ScrollArea h={300} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+    <ScrollArea h={400} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
       <Table miw={700}>
         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
           <Table.Tr>
