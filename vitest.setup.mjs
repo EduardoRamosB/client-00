@@ -21,10 +21,11 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
+// Descomentar si es necesario para eventos de resize de la pantalla
+// class ResizeObserver {
+//   observe() {}
+//   unobserve() {}
+//   disconnect() {}
+// }
 
-window.ResizeObserver = ResizeObserver;
+// window.ResizeObserver = ResizeObserver;
