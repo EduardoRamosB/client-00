@@ -1,50 +1,55 @@
-# React + TypeScript + Vite
+# Albergue Tail-World
+Esta es la parte front-end
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## React + TypeScript + Vite + Vitest + Mantine
 
-Currently, two official plugins are available:
+Este es un proyecto basado en React con TypeScript, utilizando Vite como bundler, Vitest para pruebas, y Mantine como librería de componentes. El proyecto incluye configuración básica para HMR y ESLint con reglas recomendadas.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Actualmente, hay dos plugins oficiales disponibles para React en Vite:
 
-## Expanding the ESLint configuration
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) utiliza [Babel](https://babeljs.io/) para Fast Refresh.
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) utiliza [SWC](https://swc.rs/) para Fast Refresh.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Requisitos
 
-- Configure the top-level `parserOptions` property like this:
+- Node.js (versión 14 o superior)
+- npm (versión 6 o superior)
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+## Configuración del entorno
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+1. **Clona el repositorio:**
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd nombre_del_proyecto
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+2. **Instala las dependencias:**
+    ```bash
+   npm install
+
+3. **Ejecuta el servidor de desarrollo:**
+   ```bash
+   npm run dev
+Esto iniciará el servidor de desarrollo en http://localhost:5173/.
+
+
+## Importante:
+Antes de ejecutar los test y coverage, ir a `accounts00/vitest.setup.mjs` y descomentar este bloque. De lo contrario, no funcionarán ni test ni coverage. Se comentan las líneas solo porque SonarCloud lanza observaciones al código al encontrar que `observe`, `unobserve`, y `disconnect` no se usan directamente en el código.
+   ````bash
+  
+      class ResizeObserver {
+         observe() {}
+         unobserve() {}
+         disconnect() {}
+       }
+      window.ResizeObserver = ResizeObserver;
+ 
+
+## PRUEBAS
+Las pruebas están configuradas utilizando Vitest y adaptadas para la librería Mantine.
+
+1. **Para ejecutar las pruebas, utiliza el siguiente comando:**
+   npm test
+
+2. **Para ejecutar coberturad de codigo (coverage), utiliza el siguiente comando:**
+   vitest run --coverage

@@ -21,11 +21,14 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Descomentar si es necesario para eventos de resize de la pantalla
-// class ResizeObserver {
-//   observe() {}
-//   unobserve() {}
-//   disconnect() {}
-// }
+// Descomentar para ejecutar pruebas: npm test y cobertura de codigo: vitest run --coverage
+// Se deja comentado porque SonarCloud cuenta observe, unobserve y disconnect
+// como observaciones al codigo
+/*
+class ResizeObserver {
+   observe() {}
+   unobserve() {}
+   disconnect() {}
+ }
 
-// window.ResizeObserver = ResizeObserver;
+window.ResizeObserver = ResizeObserver;*/
